@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tsinjo - Fonds d'urgence</title>
+</head>
+<body>
+<h1>Tsinjo - Fonds d'urgence</h1>
+
+<form th:action="@{/donate}" method="post" th:object="${donationRequest}">
+    <label>Nom complet :</label>
+    <input type="text" th:field="*{fullName}" required/><br/>
+
+    <label>Email :</label>
+    <input type="email" th:field="*{email}" required/><br/>
+
+    <label>Montant (Ar) :</label>
+    <input type="number" th:field="*{amount}" min="1" required/><br/>
+
+    <label>ID Paiement PSP :</label>
+    <input type="text" th:field="*{pspPaymentId}" required/><br/>
+
+    <button type="submit">Faire un don</button>
+</form>
+
+<hr/>
+
+<h2>Historique des dons et aides</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Montant (Ar)</th>
+        <th>Date</th>
+        <th>Statut paiement</th>
+        <th>Description (pour aide)</th>
+        <th>Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="tx : ${transactions}">
+        <td th:text="${tx.fullName}">Nom</td>
+        <td th:text="${tx.email}">Email</td>
+        <td th:text="${tx.amount}">Montant</td>
+        <td th:text="${tx.date}">Date</td>
+        <td th:text="${tx.paymentStatus}">Statut</td>
+        <td th:text="${tx.description}">Description</td>
+        <td th:text="${tx.donation} ? 'Don' : 'Aide'">Type</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
