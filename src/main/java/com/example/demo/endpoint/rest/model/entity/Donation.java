@@ -8,6 +8,5 @@ import lombok.Data;
 @Table(name = "donation")
 public class Donation extends AbstractTransaction {
 
-    @Embedded
-    private Donor donor;
+  @Embedded private Donor donor;
 }

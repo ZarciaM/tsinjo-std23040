@@ -8,8 +8,7 @@ import lombok.Data;
 @Table(name = "help")
 public class Help extends AbstractTransaction {
 
-    @Embedded
-    private Beneficiary beneficiary;
+  @Embedded private Beneficiary beneficiary;
 
-    private String description; // description de l'accident couvert
+  private String description; // description de l'accident couvert
 }

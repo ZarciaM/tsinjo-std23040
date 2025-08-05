@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PaymentVerificationScheduler {
 
-    private final TsinjoService tsinjoService;
+  private final TsinjoService tsinjoService;
 
-    @Scheduled(fixedDelayString = "${payment.verification.delay}")
-    public void scheduledPaymentVerification() {
-        log.info("Début de la vérification des paiements en attente");
-        tsinjoService.verifyPayments();
-        log.info("Fin de la vérification des paiements");
-    }
+  @Scheduled(fixedDelayString = "${payment.verification.delay}")
+  public void scheduledPaymentVerification() {
+    log.info("Début de la vérification des paiements en attente");
+    tsinjoService.verifyPayments();
+    log.info("Fin de la vérification des paiements");
+  }
 }

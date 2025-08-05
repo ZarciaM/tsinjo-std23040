@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @Embeddable
 public class Beneficiary {
-    private String fullName;
-    private String email;
+  private String fullName;
+  private String email;
 }

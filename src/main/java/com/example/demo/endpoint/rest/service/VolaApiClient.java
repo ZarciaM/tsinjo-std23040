@@ -15,41 +15,43 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class VolaApiClient {
 
-    @Value("${vola.api-key}")
-    private String apiKey;
+  @Value("${vola.api-key}")
+  private String apiKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+  private final RestTemplate restTemplate = new RestTemplate();
 
-    public PaymentStatus checkPaymentStatus(Payment payment) {
-        String url = "https://42cwka3n4ifcp7ufheyrpmph240iuaxo.lambda-url.eu-west-3.on.aws/payment";
+  public PaymentStatus checkPaymentStatus(Payment payment) {
+    String url = "https://42cwka3n4ifcp7ufheyrpmph240iuaxo.lambda-url.eu-west-3.on.aws/payment";
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("apiKey", apiKey)
-                .queryParam("payerEmail", payment.getPayerEmail())
-                .queryParam("pspType", payment.getPspType())
-                .queryParam("pspPaymentId", payment.getPspPaymentId());
+    UriComponentsBuilder builder =
+        UriComponentsBuilder.fromHttpUrl(url)
+            .queryParam("apiKey", apiKey)
+            .queryParam("payerEmail", payment.getPayerEmail())
+            .queryParam("pspType", payment.getPspType())
+            .queryParam("pspPaymentId", payment.getPspPaymentId());
 
-        try {
-            ResponseEntity<VolaPaymentResponse> response = restTemplate.getForEntity(builder.toUriString(), VolaPaymentResponse.class);
-            PaymentStatus status = response.getBody().getVerificationStatus();
-            log.info("Vola payment status for {}: {}", payment.getPspPaymentId(), status);
-            return status;
-        } catch (Exception e) {
-            log.error("Failed to get payment status from Vola API", e);
-            return PaymentStatus.VERIFYING; // On garde l'état jusqu'à nouvelle vérif
-        }
+    try {
+      ResponseEntity<VolaPaymentResponse> response =
+          restTemplate.getForEntity(builder.toUriString(), VolaPaymentResponse.class);
+      PaymentStatus status = response.getBody().getVerificationStatus();
+      log.info("Vola payment status for {}: {}", payment.getPspPaymentId(), status);
+      return status;
+    } catch (Exception e) {
+      log.error("Failed to get payment status from Vola API", e);
+      return PaymentStatus.VERIFYING; // On garde l'état jusqu'à nouvelle vérif
+    }
+  }
+
+  // Classe interne pour désérialiser la réponse JSON (adapter selon le JSON réel)
+  private static class VolaPaymentResponse {
+    private PaymentStatus verificationStatus;
+
+    public PaymentStatus getVerificationStatus() {
+      return verificationStatus;
     }
 
-    // Classe interne pour désérialiser la réponse JSON (adapter selon le JSON réel)
-    private static class VolaPaymentResponse {
-        private PaymentStatus verificationStatus;
-
-        public PaymentStatus getVerificationStatus() {
-            return verificationStatus;
-        }
-
-        public void setVerificationStatus(PaymentStatus verificationStatus) {
-            this.verificationStatus = verificationStatus;
-        }
+    public void setVerificationStatus(PaymentStatus verificationStatus) {
+      this.verificationStatus = verificationStatus;
     }
+  }
 }

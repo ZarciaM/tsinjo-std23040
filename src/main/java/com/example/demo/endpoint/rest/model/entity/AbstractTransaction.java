@@ -1,20 +1,19 @@
 package com.example.demo.endpoint.rest.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.time.LocalDate;
+import lombok.Data;
 
 @MappedSuperclass
 @Data
 public abstract class AbstractTransaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private LocalDate date;
+  private LocalDate date;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Payment payment;
+  @OneToOne(cascade = CascadeType.ALL)
+  private Payment payment;
 }
